@@ -1,7 +1,13 @@
 {
-  "name": "react-example",
+  "name": "lumina-luxury-beauty-parlour",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "description": "Lumina Luxury Beauty Parlour & Aesthetics Studio web application with 24/7 Live AI Concierge Agent",
+  "author": "Sain Bux (Hadi Seelro)",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SainBux-HadiSeelro/Lumina_Beaty_Parlour.git"
+  },
   "type": "module",
   "scripts": {
     "dev": "vite --port=3000 --host=0.0.0.0",

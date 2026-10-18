@@ -1,21 +1,39 @@
 import { motion } from "motion/react";
 import { Section, SectionTitle, GlassCard } from "../components/UI";
-import { Mail, Phone, MapPin, Calendar, Clock, User, ChevronRight } from "lucide-react";
-import React, { useState } from "react";
+import { Mail, Phone, MapPin, Calendar, Clock, User, ChevronRight, CheckCircle2, Sparkles } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { useSearchParams, Link } from "react-router-dom";
+import { SERVICES, PACKAGES, SALON_INFO } from "../constants";
 
 export function ContactPage() {
-  const [formState, setFormState] = useState('idle'); // idle, loading, success
+  const [searchParams] = useSearchParams();
+  const [formState, setFormState] = useState<'idle' | 'loading' | 'success'>('idle');
+  
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [selectedService, setSelectedService] = useState('');
+  const [date, setDate] = useState('');
+  const [timeSlot, setTimeSlot] = useState('Morning (09:00 - 12:00)');
+  const [notes, setNotes] = useState('');
+
+  useEffect(() => {
+    const serviceParam = searchParams.get('service');
+    if (serviceParam) {
+      setSelectedService(serviceParam);
+    }
+  }, [searchParams]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setFormState('loading');
-    setTimeout(() => setFormState('success'), 1500);
+    setTimeout(() => setFormState('success'), 1200);
   };
 
   return (
     <div className="pt-32">
       <Section>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-20">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-20 items-start">
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
@@ -26,41 +44,48 @@ export function ContactPage() {
                 subtitle="Book Your Experience"
                 title="Let's find the perfect time for your self-care ritual."
               />
-              <p className="text-lg text-brand-text/60 font-light leading-relaxed">
-                Whether you have a question about our services or are ready to schedule your next appointment, our team is here to assist you.
+              <p className="text-lg text-brand-text/60 font-light leading-relaxed mt-4">
+                Whether you desire radiant bridal styling, anti-aging rejuvenation, or customized hair therapy, our master aestheticians are devoted to your luxury sanctuary experience.
               </p>
             </div>
 
-            <div className="space-y-8">
+            <div className="space-y-6">
               {[
-                { icon: Phone, title: "Call Us", value: "+1 (212) 555-0123" },
-                { icon: Mail, title: "Email Us", value: "hello@lumina.studio" },
-                { icon: MapPin, title: "Find Us", value: "123 Beauty Lane, Luxury District, NY 10001" },
+                { icon: Phone, title: "Direct Concierge", value: SALON_INFO.phone, href: `tel:${SALON_INFO.phone.replace(/[^0-9+]/g, '')}` },
+                { icon: Mail, title: "Email Enquiries", value: SALON_INFO.email, href: `mailto:${SALON_INFO.email}` },
+                { icon: MapPin, title: "Sanctuary Location", value: SALON_INFO.address, href: "#" },
               ].map((item, i) => (
-                <div key={i} className="flex items-start gap-6 group cursor-pointer">
+                <a 
+                  key={i} 
+                  href={item.href}
+                  className="flex items-start gap-6 group p-4 rounded-2xl bg-white/[0.02] hover:bg-white/[0.05] border border-white/5 transition-all duration-300"
+                >
                   <div className="w-14 h-14 rounded-2xl bg-white/5 border border-white/10 shadow-lg flex items-center justify-center group-hover:bg-brand-accent group-hover:text-brand-dark transition-all duration-300">
-                    <item.icon size={24} />
+                    <item.icon size={22} />
                   </div>
                   <div>
-                    <h4 className="font-bold text-brand-text/40 uppercase tracking-widest text-[10px] mb-1">{item.title}</h4>
-                    <p className="text-xl font-serif text-brand-text/80 group-hover:text-brand-accent transition-colors">{item.value}</p>
+                    <h4 className="font-bold text-brand-accent uppercase tracking-widest text-[10px] mb-1">{item.title}</h4>
+                    <p className="text-lg font-serif text-brand-text/90 group-hover:text-white transition-colors">{item.value}</p>
                   </div>
-                </div>
+                </a>
               ))}
             </div>
 
-            <div className="pt-8">
-               <h4 className="font-bold text-brand-text uppercase tracking-widest text-[10px] mb-6">Operating Hours</h4>
-               <div className="grid grid-cols-2 gap-4">
+            <div className="pt-4 border-t border-white/5">
+               <h4 className="font-bold text-brand-text uppercase tracking-widest text-[11px] mb-6 flex items-center gap-2">
+                 <Clock size={14} className="text-brand-accent" />
+                 Sanctuary Hours
+               </h4>
+               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {[
-                    { day: "Mon - Fri", time: "09:00 - 20:00" },
-                    { day: "Saturday", time: "10:00 - 18:00" },
-                    { day: "Sunday", time: "Closed" },
-                    { day: "Holidays", time: "By Appointment" }
+                    { day: "Mon - Fri", time: SALON_INFO.hours.weekdays },
+                    { day: "Saturday", time: SALON_INFO.hours.saturday },
+                    { day: "Sunday", time: SALON_INFO.hours.sunday },
+                    { day: "Public Holidays", time: SALON_INFO.hours.holidays }
                   ].map((h, i) => (
-                    <div key={i} className="flex justify-between border-b border-white/5 pb-2 text-sm">
-                      <span className="font-semibold text-brand-text/40">{h.day}</span>
-                      <span className="font-medium text-brand-text">{h.time}</span>
+                    <div key={i} className="flex justify-between border-b border-white/5 pb-2 text-xs">
+                      <span className="font-medium text-brand-text/50">{h.day}</span>
+                      <span className="font-semibold text-brand-text">{h.time}</span>
                     </div>
                   ))}
                </div>
@@ -70,107 +95,175 @@ export function ContactPage() {
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.2 }}
+            transition={{ delay: 0.15 }}
           >
             <GlassCard className="p-8 lg:p-12 shadow-2xl relative border-white/10">
               {formState === 'success' ? (
-                <div className="text-center py-20">
-                  <div className="w-20 h-20 bg-brand-accent/10 text-brand-accent rounded-full flex items-center justify-center mx-auto mb-6">
-                    <Calendar size={40} />
+                <div className="text-center py-12 space-y-6">
+                  <div className="w-20 h-20 bg-brand-accent/15 text-brand-accent rounded-full flex items-center justify-center mx-auto shadow-[0_0_30px_rgba(197,160,89,0.3)]">
+                    <CheckCircle2 size={44} />
                   </div>
-                  <h3 className="text-3xl font-serif text-brand-text mb-4">Request Sent!</h3>
-                  <p className="text-brand-text/60 font-inter mb-8">
-                    Thank you for your interest. A member of our team will contact you within 2 hours to confirm your appointment.
+                  <div>
+                    <span className="text-xs uppercase font-bold tracking-[0.3em] text-brand-accent">Reservation Received</span>
+                    <h3 className="text-3xl font-serif text-brand-text mt-1">Thank You, {name || 'Valued Guest'}!</h3>
+                  </div>
+                  <div className="bg-white/5 border border-white/10 rounded-2xl p-6 text-left space-y-3 font-sans text-xs">
+                    <div className="flex justify-between border-b border-white/5 pb-2">
+                      <span className="text-brand-text/50">Requested Ritual:</span>
+                      <span className="font-semibold text-white">{selectedService || 'Bespoke Consultation'}</span>
+                    </div>
+                    <div className="flex justify-between border-b border-white/5 pb-2">
+                      <span className="text-brand-text/50">Preferred Slot:</span>
+                      <span className="font-semibold text-white">{date || 'Upcoming'} • {timeSlot}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-brand-text/50">Confirmation Email:</span>
+                      <span className="font-semibold text-brand-accent">{email || 'On file'}</span>
+                    </div>
+                  </div>
+                  <p className="text-brand-text/60 font-sans text-xs max-w-md mx-auto leading-relaxed">
+                    Our concierge desk will review specialist availability and contact you within 2 hours to confirm your private sanctuary suite.
                   </p>
                   <button 
-                    onClick={() => setFormState('idle')}
-                    className="text-brand-accent font-bold uppercase tracking-widest text-sm"
+                    onClick={() => {
+                      setFormState('idle');
+                      setName('');
+                      setEmail('');
+                      setPhone('');
+                      setNotes('');
+                    }}
+                    className="border border-brand-accent text-brand-accent hover:bg-brand-accent hover:text-brand-dark px-8 py-3 rounded-full font-bold uppercase tracking-widest text-xs transition-all"
                   >
-                    Send another request
+                    Reserve Another Session
                   </button>
                 </div>
               ) : (
                 <>
-                  <h3 className="text-3xl font-serif text-brand-text mb-8">Reservation Details</h3>
+                  <div className="flex items-center justify-between mb-8">
+                    <div>
+                      <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-brand-accent">Direct Reservation</span>
+                      <h3 className="text-3xl font-serif text-brand-text">Sanctuary Booking</h3>
+                    </div>
+                    <div className="w-10 h-10 rounded-full bg-brand-accent/10 border border-brand-accent/30 flex items-center justify-center text-brand-accent">
+                      <Sparkles size={18} />
+                    </div>
+                  </div>
+
                   <form className="space-y-6" onSubmit={handleSubmit}>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div className="space-y-2">
-                        <label className="text-[10px] font-bold uppercase tracking-widest text-brand-text/40 ml-4">Full Name</label>
+                        <label className="text-[10px] font-bold uppercase tracking-widest text-brand-text/50 ml-3">Full Name</label>
                         <div className="relative">
-                          <User size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-brand-text/20" />
+                          <User size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-brand-text/30" />
                           <input 
                             required
                             type="text" 
-                            className="w-full pl-12 pr-6 py-4 rounded-2xl bg-white/5 border border-white/10 focus:ring-1 focus:ring-brand-accent outline-none transition-all font-inter text-brand-text" 
-                            placeholder="Enter your name" 
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            className="w-full pl-12 pr-4 py-3.5 rounded-2xl bg-white/5 border border-white/10 focus:ring-1 focus:ring-brand-accent focus:border-brand-accent outline-none transition-all font-sans text-sm text-brand-text placeholder:text-brand-text/20" 
+                            placeholder="Lady / Gentleman Name" 
                           />
                         </div>
                       </div>
                       <div className="space-y-2">
-                        <label className="text-[10px] font-bold uppercase tracking-widest text-brand-text/40 ml-4">Email Address</label>
+                        <label className="text-[10px] font-bold uppercase tracking-widest text-brand-text/50 ml-3">Email Address</label>
                         <div className="relative">
-                          <Mail size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-brand-text/20" />
+                          <Mail size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-brand-text/30" />
                           <input 
                             required
                             type="email" 
-                            className="w-full pl-12 pr-6 py-4 rounded-2xl bg-white/5 border border-white/10 focus:ring-1 focus:ring-brand-accent outline-none transition-all font-inter text-brand-text" 
-                            placeholder="hello@world.com" 
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            className="w-full pl-12 pr-4 py-3.5 rounded-2xl bg-white/5 border border-white/10 focus:ring-1 focus:ring-brand-accent focus:border-brand-accent outline-none transition-all font-sans text-sm text-brand-text placeholder:text-brand-text/20" 
+                            placeholder="concierge@guest.com" 
                           />
                         </div>
                       </div>
                     </div>
 
                     <div className="space-y-2">
-                      <label className="text-[10px] font-bold uppercase tracking-widest text-brand-text/40 ml-4">Preferred Service</label>
-                      <select className="w-full px-6 py-4 rounded-2xl bg-white/5 border border-white/10 focus:ring-1 focus:ring-brand-accent outline-none transition-all font-inter appearance-none text-brand-text">
-                        <option className="bg-brand-dark">Choose a service</option>
-                        <option className="bg-brand-dark">Radiance Glow Facial</option>
-                        <option className="bg-brand-dark">Hair Styling & Treatment</option>
-                        <option className="bg-brand-dark">Bridal Makeup Package</option>
-                        <option className="bg-brand-dark">Luxury Gel Nails</option>
-                        <option className="bg-brand-dark">Body Rituals</option>
+                      <label className="text-[10px] font-bold uppercase tracking-widest text-brand-text/50 ml-3">Preferred Service or Package</label>
+                      <select 
+                        value={selectedService}
+                        onChange={(e) => setSelectedService(e.target.value)}
+                        className="w-full px-5 py-3.5 rounded-2xl bg-[#141416] border border-white/10 focus:ring-1 focus:ring-brand-accent focus:border-brand-accent outline-none transition-all font-sans text-sm text-brand-text"
+                      >
+                        <option value="">Select a ritual or package</option>
+                        <optgroup label="✨ Exclusive Luxury Packages">
+                          {PACKAGES.map(pkg => (
+                            <option key={pkg.id} value={pkg.title}>
+                              {pkg.title} ({pkg.price} • {pkg.duration})
+                            </option>
+                          ))}
+                        </optgroup>
+                        <optgroup label="💆 Bespoke Salon Services">
+                          {SERVICES.map(svc => (
+                            <option key={svc.id} value={svc.title}>
+                              {svc.title} — {svc.category} ({svc.price} • {svc.duration})
+                            </option>
+                          ))}
+                        </optgroup>
                       </select>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div className="space-y-2">
-                        <label className="text-[10px] font-bold uppercase tracking-widest text-brand-text/40 ml-4">Desired Date</label>
+                        <label className="text-[10px] font-bold uppercase tracking-widest text-brand-text/50 ml-3">Desired Date</label>
                         <div className="relative">
-                          <Calendar size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-brand-text/20" />
+                          <Calendar size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-brand-text/30" />
                           <input 
                             required
                             type="date" 
-                            className="w-full pl-12 pr-6 py-4 rounded-2xl bg-white/5 border border-white/10 focus:ring-1 focus:ring-brand-accent outline-none transition-all font-inter text-brand-text" 
+                            value={date}
+                            onChange={(e) => setDate(e.target.value)}
+                            className="w-full pl-12 pr-4 py-3.5 rounded-2xl bg-white/5 border border-white/10 focus:ring-1 focus:ring-brand-accent focus:border-brand-accent outline-none transition-all font-sans text-sm text-brand-text" 
                           />
                         </div>
                       </div>
                       <div className="space-y-2">
-                        <label className="text-[10px] font-bold uppercase tracking-widest text-brand-text/40 ml-4">Time Slot</label>
+                        <label className="text-[10px] font-bold uppercase tracking-widest text-brand-text/50 ml-3">Time Slot</label>
                         <div className="relative">
-                          <Clock size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-brand-text/20" />
-                          <select className="w-full pl-12 pr-6 py-4 rounded-2xl bg-white/5 border border-white/10 focus:ring-1 focus:ring-brand-accent outline-none transition-all font-inter appearance-none text-brand-text">
-                            <option className="bg-brand-dark">Any Time</option>
-                            <option className="bg-brand-dark">Morning (09:00 - 12:00)</option>
-                            <option className="bg-brand-dark">Afternoon (12:00 - 17:00)</option>
-                            <option className="bg-brand-dark">Evening (17:00 - 20:00)</option>
+                          <Clock size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-brand-text/30" />
+                          <select 
+                            value={timeSlot}
+                            onChange={(e) => setTimeSlot(e.target.value)}
+                            className="w-full pl-12 pr-4 py-3.5 rounded-2xl bg-[#141416] border border-white/10 focus:ring-1 focus:ring-brand-accent focus:border-brand-accent outline-none transition-all font-sans text-sm text-brand-text"
+                          >
+                            <option value="Morning (09:00 - 12:00)">Morning (09:00 - 12:00)</option>
+                            <option value="Afternoon (12:00 - 17:00)">Afternoon (12:00 - 17:00)</option>
+                            <option value="Evening (17:00 - 20:00)">Evening (17:00 - 20:00)</option>
                           </select>
                         </div>
                       </div>
                     </div>
 
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-bold uppercase tracking-widest text-brand-text/50 ml-3">Special Requests & Skin/Hair Notes (Optional)</label>
+                      <textarea
+                        rows={2}
+                        value={notes}
+                        onChange={(e) => setNotes(e.target.value)}
+                        placeholder="Mention any skin sensitivity, allergies, or bridal themes..."
+                        className="w-full px-5 py-3 rounded-2xl bg-white/5 border border-white/10 focus:ring-1 focus:ring-brand-accent focus:border-brand-accent outline-none transition-all font-sans text-sm text-brand-text placeholder:text-brand-text/20 resize-none"
+                      />
+                    </div>
+
                     <button 
+                      type="submit"
                       disabled={formState === 'loading'}
-                      className="w-full bg-brand-accent text-brand-dark py-5 rounded-2xl font-bold uppercase tracking-widest text-sm flex items-center justify-center gap-3 hover:bg-brand-text transition-all shadow-xl disabled:opacity-50"
+                      className="w-full bg-brand-accent text-brand-dark py-4 rounded-2xl font-bold uppercase tracking-widest text-xs flex items-center justify-center gap-3 hover:bg-white hover:text-brand-dark transition-all shadow-xl disabled:opacity-50"
                     >
-                      {formState === 'loading' ? 'Confirming...' : (
+                      {formState === 'loading' ? (
+                        <span>Securing Slot...</span>
+                      ) : (
                         <>
-                          Request Booking
-                          <ChevronRight size={18} />
+                          <span>Request Private Appointment</span>
+                          <ChevronRight size={16} />
                         </>
                       )}
                     </button>
-                    <p className="text-[10px] text-center text-brand-text/40 font-medium px-8 italic">
-                      *By submitting this form, you request a booking. We will contact you shortly to confirm the exact time and specialist.
+                    <p className="text-[10px] text-center text-brand-text/40 font-medium px-4 italic">
+                      *Complimentary consultations included. No upfront charge required for booking request.
                     </p>
                   </form>
                 </>
@@ -179,20 +272,6 @@ export function ContactPage() {
           </motion.div>
         </div>
       </Section>
-
-      <div className="h-96 w-full grayscale opacity-30 relative overflow-hidden">
-          <img 
-            src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&q=80" 
-            className="w-full h-full object-cover"
-            referrerPolicy="no-referrer"
-            alt="Luxury District"
-          />
-          <div className="absolute inset-0 bg-brand-dark/40 flex items-center justify-center text-white/40 text-4xl font-serif tracking-[0.5em] uppercase">
-             Luxury District
-          </div>
-          <div className="absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-brand-primary to-transparent" />
-          <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-brand-primary to-transparent" />
-      </div>
     </div>
   );
 }

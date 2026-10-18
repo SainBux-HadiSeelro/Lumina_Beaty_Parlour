@@ -1,4 +1,5 @@
 import { motion } from "motion/react";
+import { Link } from "react-router-dom";
 import { TESTIMONIALS } from "../constants";
 import { GlassCard, Section } from "./UI";
 import { Quote } from "lucide-react";
@@ -102,9 +103,9 @@ export function AboutSummary() {
               </div>
             ))}
           </div>
-          <button className="border border-white/20 px-8 py-4 rounded-full text-sm font-semibold uppercase tracking-widest hover:border-white transition-all">
+          <Link to="/about" className="inline-block border border-white/20 hover:border-brand-accent hover:text-brand-accent px-8 py-4 rounded-full text-xs font-semibold uppercase tracking-widest transition-all">
             Read Our Story
-          </button>
+          </Link>
         </motion.div>
       </div>
     </Section>

@@ -1,6 +1,8 @@
 import { motion } from "motion/react";
+import { Link } from "react-router-dom";
 import { Section, SectionTitle } from "../components/UI";
 import { GALLERY_IMAGES } from "../constants";
+import { ArrowRight, Sparkles } from "lucide-react";
 
 export function GalleryPage() {
   return (
@@ -65,11 +67,21 @@ export function GalleryPage() {
       </Section>
 
       <Section className="bg-white/[0.02] border-t border-white/5">
-        <div className="max-w-4xl mx-auto text-center">
-           <h3 className="text-3xl font-serif text-brand-text mb-6 italic">Follow our daily stories</h3>
-           <a href="#" className="inline-flex items-center gap-4 text-brand-text font-bold text-xl hover:text-brand-accent transition-colors">
-             @lumina.beauty.studio <span className="text-2xl">↗</span>
-           </a>
+        <div className="max-w-4xl mx-auto text-center space-y-6">
+           <span className="text-xs uppercase font-bold tracking-[0.3em] text-brand-accent">Inspiration to Reality</span>
+           <h3 className="text-3xl md:text-4xl font-serif text-brand-text italic">Inspired by a transformation?</h3>
+           <p className="text-sm text-brand-text/60 font-sans max-w-md mx-auto">
+             Bring your favorite style or look to your consultation and let our master artists recreate it for you.
+           </p>
+           <div className="pt-2 flex flex-wrap justify-center gap-4">
+             <Link
+               to="/contact"
+               className="inline-flex items-center gap-2 bg-brand-accent text-brand-dark px-8 py-3.5 rounded-full font-bold uppercase tracking-widest text-xs hover:bg-white transition-all shadow-xl"
+             >
+               <span>Book This Look</span>
+               <ArrowRight size={14} />
+             </Link>
+           </div>
         </div>
       </Section>
     </div>

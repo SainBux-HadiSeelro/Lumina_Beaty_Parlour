@@ -1,6 +1,7 @@
 import { motion } from "motion/react";
+import { Link } from "react-router-dom";
 import { Section, SectionTitle, GlassCard } from "../components/UI";
-import { Sparkles, Heart, Shield, Award, User } from "lucide-react";
+import { Sparkles, Heart, Shield, Award, User, ArrowRight } from "lucide-react";
 
 export function AboutPage() {
   const values = [
@@ -48,14 +49,14 @@ export function AboutPage() {
               </p>
             </div>
             
-            <div className="pt-6 grid grid-cols-2 gap-8 border-t border-brand-muted">
+            <div className="pt-6 grid grid-cols-2 gap-8 border-t border-white/10">
                <div className="flex flex-col">
-                 <span className="text-2xl font-serif text-brand-dark">Our Mission</span>
-                 <span className="text-sm text-brand-dark/50 mt-1">To empower through self-care and artistry.</span>
+                 <span className="text-2xl font-serif text-brand-text">Our Mission</span>
+                 <span className="text-sm text-brand-text/60 mt-1">To empower through self-care and artistry.</span>
                </div>
                <div className="flex flex-col">
-                 <span className="text-2xl font-serif text-brand-dark">Our Vision</span>
-                 <span className="text-sm text-brand-dark/50 mt-1">To be the global standard for boutique wellness.</span>
+                 <span className="text-2xl font-serif text-brand-text">Our Vision</span>
+                 <span className="text-sm text-brand-text/60 mt-1">To be the global standard for boutique wellness.</span>
                </div>
             </div>
           </div>
@@ -124,6 +125,21 @@ export function AboutPage() {
                <p className="text-xs font-bold uppercase tracking-widest text-brand-accent mt-2">{member.role}</p>
              </motion.div>
            ))}
+        </div>
+
+        <div className="mt-20 text-center bg-white/[0.02] border border-white/10 rounded-3xl p-12 max-w-3xl mx-auto">
+          <span className="text-xs uppercase font-bold tracking-[0.3em] text-brand-accent">Personalized Care</span>
+          <h3 className="text-3xl md:text-4xl font-serif text-brand-text mt-2 mb-4">Ready to Meet Your Specialist?</h3>
+          <p className="text-sm text-brand-text/60 font-sans max-w-lg mx-auto mb-8">
+            Experience our tailored touch in an environment dedicated to relaxation and refined elegance.
+          </p>
+          <Link
+            to="/contact"
+            className="inline-flex items-center gap-2 bg-brand-accent text-brand-dark px-8 py-3.5 rounded-full font-bold uppercase tracking-widest text-xs hover:bg-white transition-all shadow-xl"
+          >
+            <span>Book Private Consultation</span>
+            <ArrowRight size={14} />
+          </Link>
         </div>
       </Section>
     </div>

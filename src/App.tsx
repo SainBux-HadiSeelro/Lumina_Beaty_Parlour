@@ -3,11 +3,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-/**
- * @license
- * SPDX-License-Identifier: Apache-2.0
- */
-
 import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import { Navbar } from "./components/Navbar";
@@ -17,6 +12,7 @@ import { ServicesPage } from "./pages/ServicesPage";
 import { AboutPage } from "./pages/AboutPage";
 import { GalleryPage } from "./pages/GalleryPage";
 import { ContactPage } from "./pages/ContactPage";
+import { LuminaChatbot } from "./components/LuminaChatbot";
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -32,7 +28,7 @@ export default function App() {
   return (
     <Router>
       <ScrollToTop />
-      <div className="min-h-screen flex flex-col selection:bg-brand-accent selection:text-white">
+      <div className="min-h-screen flex flex-col selection:bg-brand-accent selection:text-white bg-brand-primary">
         <Navbar />
         <main className="flex-grow">
           <Routes>
@@ -44,8 +40,8 @@ export default function App() {
           </Routes>
         </main>
         <Footer />
+        <LuminaChatbot />
       </div>
     </Router>
   );
 }
-
